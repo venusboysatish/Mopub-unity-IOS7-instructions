@@ -1,7 +1,7 @@
 Mopub-unity-IOS7-instructions
 =============================
 
-MoPub IOS7 integration. Instructions and bug fixes:
+MoPub IOS7 integration using XCode 5. Instructions and bug fixes:
 
 Note : these instructions deal with only the XCode part of building an unity game with Mopub, for the Unity side of importing
 the assets, and setting up the project, please refer to this-> https://github.com/mopub/mopub-unity-ios-plugin
