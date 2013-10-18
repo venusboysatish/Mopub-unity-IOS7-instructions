@@ -22,19 +22,33 @@ D)	In Build Settings, update the Code Signing section appropriately
 
 E)	In Build Settings, under Linking section, expand the Other Linker Flags drop down, and append "-ObjC" to the existing strings for Debug and Release
 
-F)	Incase of Linker errors, add this to the "Library Search Paths" under "Search Paths" section
-/Volumes/Projects/Satish/MegaDriver/IOSBuild/MegaDriver_02/Classes/MoPubSDK/AdNetworkSupport/Millennial/SDK /Volumes/Projects/Satish/MegaDriver/IOSBuild/MegaDriver_02/Libraries
+F)	Incase of Linker errors, add this to the existing strings in the "Library Search Paths" under "Search Paths" section
+	<Your XCode Project Location>/Libraries
 
 G)	Ior IOS7, OS status bar comes on top of your game, fix -
-under 
-@implementation UnityViewController
-of iPhone_View.mm in Classes folder, add the following
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
+	under 
+	@implementation UnityViewController
+	of iPhone_View.mm in Classes folder, add the following
+	- (BOOL)prefersStatusBarHidden
+	{
+    		return YES;
+	}
 
-H) fix for this error:
-Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[__NSCFDictionary setObject:forKey:]: attempt to insert nil value (key: WebKitLocalStorageDatabasePathPreferenceKey)'
+H) 	fix for this error:
+	Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[__NSCFDictionary setObject:forKey:]: attempt to insert nil value (key: WebKitLocalStorageDatabasePathPreferenceKey)'
 
-go to MPHTMLBannerCustomEvent.m and at "self.bannerAgent = …" line, add a breakpoint, set Condition as NSInvalidArgumentException, then Enable, "Automatically continue after evaluating", and then(optional) set Action to "Log Message" and put "NSInvalidArgumentException averted" in the text box.
+	In Classes/MoPubSDK/Internal/HTML to MPHTMLBannerCustomEvent.m and at "self.bannerAgent = …" line, add a breakpoint, set Condition as NSInvalidArgumentException, then Enable, "Automatically continue after evaluating", and then(optional) set Action to "Log Message" and put "NSInvalidArgumentException averted" in the text box.
+
+I) 	On IOS 5.1 devices, the game might crash on first launch. the subsequent crashes will work fine.
+	The below fix will only avoid the Game from crashing. The ads(both banner and interstitial) will not show in the first launch of the game.
+
+	search for "Looking for custom event class named" and surround (self.bannerCustomEvent, and self.interstitialCustomEvent) the banner calling blocks with try-catch block
+		@try
+        {
+            self.adBannerView = [[MPInstanceProvider sharedProvider] buildGADBannerViewWithFrame:CGRectZero];
+            self.adBannerView.delegate = self;
+        }
+        @catch (NSException *exception)
+        {
+            NSLog(@"Got exception %@", exception);
+        }
